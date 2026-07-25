@@ -1199,13 +1199,13 @@ html, body, a, button, .btn-solid, .btn-outline, .carousel-btn {
 
     /* HERO */
     .hero { 
-        padding: 100px 5% 60px; 
+        padding: 100px 5% 60px !important; 
         flex-direction: column; 
         text-align: center; 
-        min-height: auto;
+        min-height: auto !important;
     }
     .hero-content { max-width: 100%; }
-    .hero-title { font-size: 2.5rem; }
+    .hero-title { font-size: 2.5rem !important; }
     .hero-desc { font-size: 0.85rem; }
     .hero-image-container { 
         position: relative; 
@@ -1335,7 +1335,7 @@ html, body, a, button, .btn-solid, .btn-outline, .carousel-btn {
 
 /* SMALL MOBILE - 480px and below */
 @media (max-width: 480px) {
-    .hero-title { font-size: 2rem; }
+    .hero-title { font-size: 2rem !important; }
     .hero-subtitle { font-size: 0.7rem; }
     .tagline { font-size: 0.6rem; }
     .btn-solid { 
@@ -1379,4 +1379,36 @@ html, body, a, button, .btn-solid, .btn-outline, .carousel-btn {
     .logo-text .main-title { font-size: 0.8rem; }
     .logo-text .sub-title { font-size: 0.8rem; }
     .logo-icon { font-size: 1.2rem; }
+}
+
+/* ============================================================
+   EXTRA MOBILE FIXES (inline-style overrides + real bugs)
+   ============================================================ */
+
+/* background-attachment:fixed is set inline on several sections
+   and breaks/glitches on mobile browsers (esp. iOS Safari) */
+@media (max-width: 768px) {
+    .cta-container, .portfolio, .testimonials {
+        background-attachment: scroll !important;
+    }
+
+    /* Header logo is fixed 80px inline, too big once nav stacks */
+    .logo img { height: 55px !important; }
+
+    /* Portfolio filter buttons - fully inline styled, tighten on phones */
+    .filter-btn { padding: 8px 16px !important; font-size: 0.7rem !important; }
+}
+
+@media (max-width: 480px) {
+    .logo img { height: 45px !important; }
+    .filter-btn { padding: 7px 14px !important; font-size: 0.65rem !important; }
+    /* footer logo was growing (100px) on small phones vs 50px on tablets - fix */
+    .footer-grid img { height: 55px !important; }
+}
+
+/* Custom cursor + ink-trail canvas only make sense with a mouse.
+   On touch devices they leave a stray glowing dot stuck at 0,0
+   and keep an animation loop running for nothing. */
+@media (max-width: 768px), (pointer: coarse) {
+    .custom-ink-pointer, #inkCanvas { display: none !important; }
 }

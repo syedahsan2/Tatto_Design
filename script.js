@@ -1,5 +1,29 @@
-document.addEventListener("DOMContentLoaded", function() {
-    
+async function loadPartial(url, placeholderId) {
+    const el = document.getElementById(placeholderId);
+    if (!el) return;
+    try {
+        const res = await fetch(url);
+        el.innerHTML = await res.text();
+    } catch (err) {
+        console.error(`Could not load ${url} — run this via a local server (not file://)`, err);
+    }
+}
+
+function setActiveNavLink() {
+    const current = location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === current);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", async function() {
+
+    await Promise.all([
+        loadPartial('header.html', 'header-placeholder'),
+        loadPartial('footer.html', 'footer-placeholder')
+    ]);
+    setActiveNavLink();
+
     // ============================================
     // 1. CAROUSEL / SLIDER FUNCTIONALITY
     // ============================================
@@ -199,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const filter = this.textContent.trim().toLowerCase();
 
                 portfolioItems.forEach(item => {
-                    const category = item.getAttribute('data-category');
+                    const category = (item.getAttribute('data-category') || '').toLowerCase();
                     if (filter === 'all' || category === filter) {
                         item.style.display = 'block';
                     } else {

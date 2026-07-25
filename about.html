@@ -10,21 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="custom-ink-pointer" id="inkPointer"></div>
-    <canvas id="inkCanvas"></canvas>
-
-    <header class="navbar">
-        <div class="logo">
-           <img src="./Home/Logo.png" alt="Custom Tattoo Lab Logo" style="height: 80px; width: auto;">
-        </div>
-        <nav class="nav-links">
-            <a href="index.html">HOME</a>
-            <a href="portfolio.html">OUR WORKS</a>
-            <a href="about.html" class="active">ABOUT US</a>
-            <a href="faq.html">FAQ</a>
-        </nav>
-        <a href="contact.html" class="btn-outline">ORDER YOUR DESIGN <span class="arrow">↗</span></a>
-    </header>
+    <div id="header-placeholder"></div>
 
     <section class="hero" style="min-height: 50vh; padding: 120px 8% 60px;">
         <div class="hero-content" style="max-width: 100%; text-align: center;">
@@ -43,7 +29,7 @@
         
         <!-- Content -->
         <div style="position: relative; z-index: 1;">
-            <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 60px; align-items: center;">
+            <div class="content-container">
                 <div>
                     <img src="./About/side.jpg" alt="Artist at work" style="width: 100%; border-radius: 16px; border: 1px solid rgba(212,150,60,0.2);">
                 </div>
@@ -71,7 +57,7 @@
             <p class="section-meta" style="text-align: center;">OUR FOUNDER</p>
             <h2 class="section-title" style="text-align: center;">THE FOUNDERS' <span class="gold-text">STORY</span></h2>
 
-            <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 60px; align-items: center; max-width: 1200px; margin: 0 auto;">
+            <div class="content-container" style="max-width: 1200px; margin: 0 auto;">
                 <div>
                     <img src="./About/founders.jpg" alt="Founders" style="width: 100%; border-radius: 16px; border: 1px solid rgba(212,150,60,0.2);">
                 </div>
@@ -106,99 +92,7 @@
         </div>
     </section>
 
-    <footer class="footer">
-        
-        <!-- Top Decorative Border -->
-        <div class="footer-top-border"></div>
-        
-        <div class="footer-main">
-            <!-- Main Footer Grid -->
-            <div class="footer-grid">
-                
-                <!-- Left - Brand + Tagline -->
-                <div>
-                    <div class="footer-brand">
-                        <div><img src="./Home/LOGO.png" alt="Logo" style="height: 180px; width: auto; max-width: 100%;"></div>
-                    </div>
-                    <p class="footer-tagline">
-                        We craft premium digital tattoo designs with artistic excellence. 
-                        Bringing your vision to life with precision and creativity.
-                    </p>
-                    <!-- Decorative Ink Splatter SVG -->
-                    <svg width="120" height="20" viewBox="0 0 120 20" style="opacity: 0.3; max-width: 100%;">
-                        <circle cx="10" cy="10" r="4" fill="#d4963c"/>
-                        <circle cx="25" cy="6" r="3" fill="#d4963c"/>
-                        <circle cx="40" cy="14" r="5" fill="#d4963c"/>
-                        <circle cx="58" cy="8" r="3" fill="#d4963c"/>
-                        <circle cx="75" cy="12" r="4" fill="#d4963c"/>
-                        <circle cx="90" cy="5" r="2" fill="#d4963c"/>
-                        <circle cx="105" cy="15" r="3" fill="#d4963c"/>
-                        <circle cx="115" cy="8" r="2" fill="#d4963c"/>
-                    </svg>
-                </div>
-                
-                <!-- Center - Quick Links -->
-                <div>
-                    <h4 class="footer-heading">Navigate</h4>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <a href="index.html" class="footer-link"><span class="dot">◆</span> Home</a>
-                        <a href="about.html" class="footer-link"><span class="dot">◆</span> About Us</a>
-                        <a href="portfolio.html" class="footer-link"><span class="dot">◆</span> Our Works</a>
-                        <a href="faq.html" class="footer-link"><span class="dot">◆</span> FAQ</a>
-                        <a href="contact.html" class="footer-link"><span class="dot">◆</span> Contact</a>
-                    </div>
-                </div>
-                
-                <!-- Right - Contact + Social -->
-                <div>
-                    <h4 class="footer-heading">Connect</h4>
-                    <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px;">
-                        <div class="footer-contact-item"><span class="icon">📧</span> info@customtattoolab.com</div>
-                        <div class="footer-contact-item"><span class="icon">📱</span> +1 (555) 123-4567</div>
-                        <div class="footer-contact-item"><span class="icon">📍</span> Digital Studio · Worldwide</div>
-                    </div>
-                    
-                    <!-- Social Icons -->
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        <a href="#" class="social-circle">𝕏</a>
-                        <a href="#" class="social-circle">📸</a>
-                        <a href="#" class="social-circle">📘</a>
-                        <a href="#" class="social-circle">📺</a>
-                        <a href="#" class="social-circle">🎨</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Decorative Divider -->
-            <div class="footer-divider-pattern">
-                <svg viewBox="0 0 1200 20" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-                    <pattern id="needlePattern" x="0" y="0" width="40" height="20" patternUnits="userSpaceOnUse">
-                        <line x1="20" y1="0" x2="20" y2="20" stroke="#d4963c" stroke-width="1" stroke-dasharray="3,3"/>
-                        <circle cx="20" cy="10" r="2" fill="#d4963c"/>
-                    </pattern>
-                    <rect width="100%" height="100%" fill="url(#needlePattern)"/>
-                </svg>
-            </div>
-            
-            <!-- Bottom Bar -->
-            <div class="footer-bottom-bar">
-                <div class="footer-copyright">
-                    © 2026 <span class="gold">Custom Tattoo Lab</span>. All rights reserved.
-                </div>
-                <div class="footer-legal-links">
-                    <a href="#">Privacy Legal Terms</a>
-                    <span class="sep">|</span>
-                    <a href="#">Cookie Policy</a>
-                    <span class="sep">|</span>
-                    <a href="#">Cookie Settings</a>
-                </div>
-                <div class="footer-bottom-tag">✦ DIGITAL INK SINCE 2026 ✦</div>
-            </div>
-        </div>
-        
-        <!-- Bottom Decorative Gold Line -->
-        <div class="footer-bottom-border"></div>
-    </footer>
+    <div id="footer-placeholder"></div>
 
     <script src="script.js"></script>
 </body>
