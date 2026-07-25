@@ -70,9 +70,8 @@ document.addEventListener("DOMContentLoaded", async function() {
     setupCarousel("works-track", "works-next", "works-prev");
     setupCarousel("review-track", "review-next", "review-prev");
 
-
     // ============================================
-    // 2. CUSTOM CURSOR + INK CANVAS EFFECT
+    // 2. CUSTOM CURSOR + SMOOTH INK CANVAS EFFECT
     // ============================================
     const pointer = document.getElementById("inkPointer");
     const canvas = document.getElementById("inkCanvas");
@@ -90,6 +89,11 @@ document.addEventListener("DOMContentLoaded", async function() {
     let lastY = 0;
     let lastTime = Date.now();
     let currentWidth = 3;
+    let targetWidth = 3;
+
+    // Throttle mousemove for better performance
+    let isMoving = false;
+    let moveTimeout;
 
     document.addEventListener("mousemove", (e) => {
         const currentX = e.clientX;
@@ -103,11 +107,13 @@ document.addEventListener("DOMContentLoaded", async function() {
         if (timeDiff > 0) {
             let distance = Math.sqrt(Math.pow(currentX - lastX, 2) + Math.pow(currentY - lastY, 2));
             let speed = distance / timeDiff;
-            let targetWidth = Math.min(Math.max(speed * 5, 3), 16);
-            currentWidth += (targetWidth - currentWidth) * 0.15;
+            targetWidth = Math.min(Math.max(speed * 4, 2), 14);
         }
 
-        if (points.length === 0 || Math.abs(currentX - lastX) > 2 || Math.abs(currentY - lastY) > 2) {
+        // Smooth interpolation
+        currentWidth += (targetWidth - currentWidth) * 0.12;
+
+        if (points.length === 0 || Math.abs(currentX - lastX) > 1.5 || Math.abs(currentY - lastY) > 1.5) {
             points.push({
                 x: currentX,
                 y: currentY,
@@ -119,46 +125,65 @@ document.addEventListener("DOMContentLoaded", async function() {
         lastX = currentX;
         lastY = currentY;
         lastTime = currentTime;
+
+        // Throttle rendering
+        if (!isMoving) {
+            isMoving = true;
+            requestAnimationFrame(() => {
+                isMoving = false;
+            });
+        }
     });
 
     function render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         if (points.length > 2) {
-            for (let i = 1; i < points.length - 1; i++) {
-                const xc = (points[i].x + points[i + 1].x) / 2;
-                const yc = (points[i].y + points[i + 1].y) / 2;
+            // Use a more efficient drawing approach
+            const drawPoints = points.slice(0, 300); // Limit points for performance
+            
+            for (let i = 1; i < drawPoints.length - 1; i++) {
+                const xc = (drawPoints[i].x + drawPoints[i + 1].x) / 2;
+                const yc = (drawPoints[i].y + drawPoints[i + 1].y) / 2;
 
                 ctx.beginPath();
-                ctx.moveTo(points[i - 1].x, points[i - 1].y);
-                ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+                ctx.moveTo(drawPoints[i - 1].x, drawPoints[i - 1].y);
+                ctx.quadraticCurveTo(drawPoints[i].x, drawPoints[i].y, xc, yc);
 
-                ctx.strokeStyle = `rgba(212, 150, 60, ${points[i].alpha})`;
-                ctx.lineWidth = points[i].width;
-                ctx.lineCap = "butt";
-                ctx.lineJoin = "miter";
-                ctx.shadowBlur = 4;
-                ctx.shadowColor = "#d4963c";
+                // Smoother fading with better color
+                const alpha = drawPoints[i].alpha * 0.6;
+                ctx.strokeStyle = `rgba(212, 150, 60, ${alpha})`;
+                ctx.lineWidth = drawPoints[i].width;
+                ctx.lineCap = "round";
+                ctx.lineJoin = "round";
+                ctx.shadowBlur = 6;
+                ctx.shadowColor = `rgba(212, 150, 60, ${alpha * 0.5})`;
                 ctx.stroke();
 
-                points[i - 1].alpha -= 0.03;
+                // Fade out points more gradually
+                drawPoints[i - 1].alpha -= 0.015;
             }
 
-            points = points.filter(p => p.alpha > 0);
+            // Keep points with alpha > 0.05
+            points = points.filter(p => p.alpha > 0.05);
+            
+            // Limit points to prevent memory issues
+            if (points.length > 500) {
+                points = points.slice(-300);
+            }
         }
 
         requestAnimationFrame(render);
     }
     
-    requestAnimationFrame(render);
+    render();
 
     // Hover effect for interactive elements
-    const UIInteractive = document.querySelectorAll("a, button, .btn-solid, .btn-outline, .carousel-btn");
+    const UIInteractive = document.querySelectorAll("a, button, .btn-solid, .btn-outline, .carousel-btn, .filter-btn");
     UIInteractive.forEach(item => {
         item.addEventListener("mouseenter", () => pointer.classList.add("hover"));
         item.addEventListener("mouseleave", () => pointer.classList.remove("hover"));
     });
-
 
     // ============================================
     // 3. ACCORDION / FAQ FUNCTIONALITY
@@ -170,7 +195,6 @@ document.addEventListener("DOMContentLoaded", async function() {
         const content = item.querySelector('.accordion-content');
         const icon = header.querySelector('.icon');
 
-        // Initially close all except the active one
         if (!item.classList.contains('active')) {
             content.style.maxHeight = '0';
         } else {
@@ -181,7 +205,6 @@ document.addEventListener("DOMContentLoaded", async function() {
         header.addEventListener('click', function() {
             const isActive = item.classList.contains('active');
 
-            // Close all accordion items
             accordionItems.forEach((otherItem) => {
                 const otherContent = otherItem.querySelector('.accordion-content');
                 const otherIcon = otherItem.querySelector('.accordion-header .icon');
@@ -190,7 +213,6 @@ document.addEventListener("DOMContentLoaded", async function() {
                 if (otherIcon) otherIcon.textContent = '+';
             });
 
-            // If this item was not active, open it
             if (!isActive) {
                 item.classList.add('active');
                 content.style.maxHeight = content.scrollHeight + 'px';
@@ -198,7 +220,6 @@ document.addEventListener("DOMContentLoaded", async function() {
             }
         });
     });
-
 
     // ============================================
     // 4. PORTFOLIO FILTER BUTTONS (Portfolio Page)
@@ -209,13 +230,11 @@ document.addEventListener("DOMContentLoaded", async function() {
     if (filterBtns.length > 0 && portfolioItems.length > 0) {
         filterBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                // Remove active class from all filter buttons
                 filterBtns.forEach(b => {
                     b.style.background = 'transparent';
                     b.style.color = '#888';
                     b.style.border = '1px solid #333';
                 });
-                // Add active class to clicked button
                 this.style.background = '#d4963c';
                 this.style.color = '#000';
                 this.style.border = 'none';

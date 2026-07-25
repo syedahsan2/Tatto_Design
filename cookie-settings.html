@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Tattoo Lab - Cookie Settings</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <section class="hero" style="min-height: 40vh; padding: 120px 8% 40px;">
+        <div class="hero-content" style="max-width: 100%; text-align: center;">
+            <p class="hero-subtitle">LEGAL</p>
+            <h1 class="hero-title" style="font-size: 3rem;">
+                COOKIE <span class="gold-text">SETTINGS</span>
+            </h1>
+        </div>
+    </section>
+
+    <section style="padding: 20px 8% 100px;">
+        <div style="max-width: 750px; margin: 0 auto;">
+
+            <p style="color: #aaaaaa; line-height: 1.8; margin-bottom: 35px; text-align: center;">
+                Choose which cookies customtattoolab.com is allowed to use. You can change this anytime. See our <a href="cookie-policy.html" class="gold-text" style="text-decoration: underline;">Cookie Policy</a> for details.
+            </p>
+
+            <div class="accordion-item" style="padding: 22px 30px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; gap: 20px;">
+                <div>
+                    <h3 style="color: #fff; font-size: 1rem; font-weight: 700; margin-bottom: 6px;">Necessary</h3>
+                    <p style="color: #888; font-size: 0.85rem; margin: 0;">Required for the site to work. Always on.</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="accordion-item" style="padding: 22px 30px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; gap: 20px;">
+                <div>
+                    <h3 style="color: #fff; font-size: 1rem; font-weight: 700; margin-bottom: 6px;">Analytics</h3>
+                    <p style="color: #888; font-size: 0.85rem; margin: 0;">Helps us understand how visitors use the site.</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="pref-analytics">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="accordion-item" style="padding: 22px 30px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; gap: 20px;">
+                <div>
+                    <h3 style="color: #fff; font-size: 1rem; font-weight: 700; margin-bottom: 6px;">Marketing</h3>
+                    <p style="color: #888; font-size: 0.85rem; margin: 0;">Used to show more relevant offers about our services.</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="pref-marketing">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+                <button id="save-prefs" class="btn-solid" style="border: none; cursor: pointer;">SAVE PREFERENCES</button>
+                <button id="accept-all" class="btn-outline" style="cursor: pointer;">ACCEPT ALL</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="cookie-save-toast" id="cookieToast">Preferences saved ✓</div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="script.js"></script>
+    <script>
+        (function () {
+            const analytics = document.getElementById('pref-analytics');
+            const marketing = document.getElementById('pref-marketing');
+            const toast = document.getElementById('cookieToast');
+
+            function loadPrefs() {
+                try {
+                    const saved = JSON.parse(localStorage.getItem('ctl_cookie_prefs') || '{}');
+                    analytics.checked = !!saved.analytics;
+                    marketing.checked = !!saved.marketing;
+                } catch (e) { /* ignore malformed storage */ }
+            }
+
+            function savePrefs(prefs) {
+                localStorage.setItem('ctl_cookie_prefs', JSON.stringify(prefs));
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2200);
+            }
+
+            loadPrefs();
+
+            document.getElementById('save-prefs').addEventListener('click', () => {
+                savePrefs({ necessary: true, analytics: analytics.checked, marketing: marketing.checked });
+            });
+
+            document.getElementById('accept-all').addEventListener('click', () => {
+                analytics.checked = true;
+                marketing.checked = true;
+                savePrefs({ necessary: true, analytics: true, marketing: true });
+            });
+        })();
+    </script>
+</body>
+</html>
